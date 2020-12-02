@@ -1,0 +1,1749 @@
+﻿swagger: '2.0'
+info:
+  version: v1.0
+  x-swagger-file-version: '1.1'
+  title: Lead Management
+  description: |
+
+    * This API provides operation for lead management (creation, update and retrieval)
+    * Target clients for this API include
+      * Lead management frontend applciations which can be AIA's internal applications or AIA partner's applications.
+      * Partner's backend applications submitting leads.
+      * AIA's backend processes which handle partner's lead submssions in the form of batch files.
+    
+ 
+host: api.aia.com
+basePath: /il/lead/v1
+schemes:
+  - https
+produces:
+  - application/json
+consumes:
+  - application/json
+parameters:
+  Authorization:
+    name: Authorization
+    description: >-
+      An access token issued by an AIA Authorization server. This will have the
+      format Bearer + {space} + {accessToken}. Example: Bearer
+      KGNsaWVudF9pZDpjbGllbnRfc2VjcmV0KQ==
+    in: header
+    required: true
+    type: string
+  x-aia-partner-code:
+    name: x-aia-partner-code
+    description: Partner code
+    in: header
+    required: true
+    type: string
+    enum:
+      - CITI
+      - PBB
+      - BPI
+      - SINGTEL
+  x-aia-request-id:
+    name: x-aia-request-id
+    description: Unique id for the request for tracking purposes
+    in: header
+    required: true
+    type: string
+  x-page-limit:
+    in: query
+    name: x-page-limit
+    description: >-
+      This parameter indicates the maximum number of items to return. If this
+      parameter is not specified, all records are returned starting from the
+      position specified by the offset parameter.
+    required: false
+    type: string
+responses:
+  GWNotFoundError404:
+    description: 
+      <table>
+        <tr>
+          <td><b>reasonCode</b></td>
+          <td><b>reason</b></td>
+          <td><b>message</b></td>
+          <td><b>sourceSystem</b></td>
+        </tr>
+        <tr>
+          <td>ERR_GW_404</td>
+          <td>Not Found</td>
+          <td>Resource not found on gateway</td>
+          <td>Gateway</td>
+        </tr>
+      </table>
+
+  NotFoundError404:
+    description: 
+      <table>
+        <tr>
+          <td><b>reasonCode</b></td>
+          <td><b>reason</b></td>
+          <td><b>message</b></td>
+          <td><b>sourceSystem</b></td>
+        </tr>
+        <tr>
+          <td>ERR_GW_404</td>
+          <td>Not Found</td>
+          <td>Resource not found on gateway</td>
+          <td>Gateway</td>
+        </tr>
+      </table>
+
+    schema:
+      $ref: '#/definitions/Exception'
+
+  ClientError400:
+    description: 
+      <table>
+        <tr>
+          <td><b>reasonCode</b></td>
+          <td><b>reason</b></td>
+          <td><b>message</b></td>
+          <td><b>sourceSystem</b></td>
+        </tr>
+        <tr>
+          <td>ERR_LEAD_400</td>
+          <td>Bad Request</td>
+          <td>Invalid data for Prefix field</td>
+          <td>API</td>
+        </tr>
+      </table>
+
+    schema:
+      $ref: '#/definitions/Exception'
+
+  internalError500:
+      # Document specific error codes and messages if possible
+    description: 
+    
+      <table>
+        <tr>
+          <td><b>reasonCode</b></td>
+          <td><b>reason</b></td>
+          <td><b>message</b></td>
+          <td><b>sourceSystem</b></td>
+        </tr>
+        <tr>
+          <td>ERR_LEAD_500</td>
+          <td>Internal Server Error</td>
+          <td>400 Bad Request - Could not find a property named '_aia_bestsuitableproduct_value</td>
+          <td>Lead Management System</td>
+        </tr>
+
+      </table>
+      
+    schema:
+      $ref: '#/definitions/Exception'
+
+###### Standard Gateway Errors ###########
+      
+  GatewayError401:
+    description: 
+    
+      <table>
+        <tr>
+          <td><b>reasonCode</b></td>
+          <td><b>reason</b></td>
+          <td><b>message</b></td>
+          <td><b>sourceSystem</b></td>
+        </tr>
+        <tr>
+          <td>ERR_GW_401</td>
+          <td>Unauthorized</td>
+          <td>Authorization error</td>
+          <td>Gateway</td>
+        </tr>
+      </table>
+
+    schema:
+      $ref: '#/definitions/Exception'
+
+  GatewayError502:
+    description: 
+      <table>
+        <tr>
+          <td><b>reasonCode</b></td>
+          <td><b>reason</b></td>
+          <td><b>message</b></td>
+          <td><b>sourceSystem</b></td>
+        </tr>
+        <tr>
+          <td>ERR_GW_502</td>
+          <td>Bad Gateway</td>
+          <td>Service is down or being upgraded</td>
+          <td>Gateway</td>
+        </tr>
+      </table>
+      
+    schema:
+      $ref: '#/definitions/Exception'
+
+  GatewayError503:
+    description: 
+      <table>
+        <tr>
+          <td><b>reasonCode</b></td>
+          <td><b>reason</b></td>
+          <td><b>message</b></td>
+          <td><b>sourceSystem</b></td>
+        </tr>
+        <tr>
+          <td>ERR_GW_503</td>
+          <td>Service Unavailable</td>
+          <td>Service is up, but overloaded with requests</td>
+          <td>Gateway</td>
+        </tr>
+      </table>
+
+    schema:
+      $ref: '#/definitions/Exception'
+
+  GatewayError504:
+    description: 
+      <table>
+        <tr>
+          <td><b>reasonCode</b></td>
+          <td><b>reason</b></td>
+          <td><b>message</b></td>
+          <td><b>sourceSystem</b></td>
+        </tr>
+        <tr>
+          <td>ERR_GW_504</td>
+          <td>Gateway Timeout</td>
+          <td>Servers are up, but the request couldn’t be serviced due to internal errors</td>
+          <td>Gateway</td>
+        </tr>
+      </table>
+
+    schema:
+      $ref: '#/definitions/Exception'
+paths:
+  /leads:
+    post:
+      tags:
+        - Lead
+      summary: Create the leads for potential customer
+      description: This operation will create the leads for the bank's customer in Lead Management System.
+      operationId: lead_post
+      parameters:
+        - $ref: '#/parameters/Authorization'
+        - $ref: '#/parameters/x-aia-request-id'
+        - in: body
+          name: lead
+          description: Lead creation data json for creating the new leads from client application
+          schema:
+            $ref: '#/definitions/Lead'
+          required: true
+      responses:
+        '200':
+          description: Successfully created the lead
+          schema:
+            properties:
+              leadId:
+                type: string
+                description: Lead ID
+            required:
+              - leadId
+        '400':
+          $ref: '#/responses/ClientError400'
+        '401':
+          $ref: '#/responses/GatewayError401'
+        '404':
+          $ref: '#/responses/GWNotFoundError404'
+        '500':
+          $ref: '#/responses/internalError500'
+        '502':
+          $ref: '#/responses/GatewayError502'
+        '503':
+          $ref: '#/responses/GatewayError503'
+        '504':
+          $ref: '#/responses/GatewayError504'
+    put:
+      tags:
+        - Lead
+      summary: Update the lead information of the customer
+      description: This operation will update the leads for the bank's customer in Lead Management System.
+      operationId: lead_put
+      parameters:
+        - $ref: '#/parameters/Authorization'
+        - $ref: '#/parameters/x-aia-request-id'
+        - in: body
+          name: lead
+          description: Lead information to be updated from client application.
+          schema:
+            $ref: '#/definitions/Lead'
+          required: true
+      responses:
+        '200':
+          description: Successfully updated the lead information
+          schema:
+            properties:
+              status:
+                type: string
+                description: Status of updating the lead in response
+            required:
+              - status
+        '400':
+          $ref: '#/responses/ClientError400'
+        '401':
+          $ref: '#/responses/GatewayError401'
+        '404':
+          $ref: '#/responses/GWNotFoundError404'
+        '500':
+          $ref: '#/responses/internalError500'
+        '502':
+          $ref: '#/responses/GatewayError502'
+        '503':
+          $ref: '#/responses/GatewayError503'
+        '504':
+          $ref: '#/responses/GatewayError504'
+  /leads/get-details:        
+    post:
+      tags:
+        - Lead
+      summary: Retrieve leads data of the customer
+      description: This operation will get the leads details from Lead Management System depending on the leads ID.
+      operationId: lead_getById
+      parameters:
+        - $ref: '#/parameters/Authorization'
+        - $ref: '#/parameters/x-aia-request-id'
+        - in: body
+          name: leadQuery
+          description: | 
+            * Lead serach query to fetch the lead details from Lead Management System.  
+              client application have to send either lead ID or lead reference number.
+            * search query will be used to only fetch the selected fields name. This is non mandatory field. If no value passed it will return all the fields for lead entity. 
+              Sample for lead query lead API
+              
+                client(prefix;firstNm;phone{countryCd/phoneNumber})
+          schema:
+            $ref: '#/definitions/LeadQuery'
+      responses:
+        '200':
+          description: Successful retrieval of lead information
+          schema:
+            $ref: '#/definitions/Lead'
+        '400':
+          $ref: '#/responses/ClientError400'
+        '401':
+          $ref: '#/responses/GatewayError401'
+        '404':
+          $ref: '#/responses/GWNotFoundError404'
+        '500':
+          $ref: '#/responses/internalError500'
+        '502':
+          $ref: '#/responses/GatewayError502'
+        '503':
+          $ref: '#/responses/GatewayError503'
+        '504':
+          $ref: '#/responses/GatewayError504'
+  /leads/get-list:
+    post:
+      tags:
+        - Lead
+      summary: Retrieve leads data of the customer
+      description: |
+      
+          * This operation will retrieve the Leads list from Lead Management System.
+          
+          * Below is the input details that need to be used for getting the result.
+          
+            * For Front End application
+            
+              - "sellerId" - Mandatory, Client application must use the seller ID to get the leads list.
+              - Below are the additional filter criteria for leads list. All fields are optional.
+                  - "leadStage" - Optional
+                  - "leadSource" - Optional
+                  - "leadAge" - Optional
+                  - "gender" - Optional
+                  - "productNm" - Optional
+                  - "firstNm" - Optional
+              - serachQuery - Optional, search query will be used to only fetch the selected fields name. This is non mandatory field. If no value passed it will return all the fields for leads list. 
+                     Sample for lead query lead API
+                      client(prefix;firstNm;phone{countryCd/phoneNumber})
+          
+            * For BU batch jobs
+              - "leadProcessingFlag" - Mandatory for fetching the leads data by BU btach jobs. This parameter will be used when leads need to be exported to Telemarketing application, F2F or BU Partner Update.
+              - "leadStage" - Only mandatory for fetching the leads data by BU jobs for for sending the leads update to BU partners.
+          
+      operationId: leadList_get
+      parameters:
+        - $ref: '#/parameters/Authorization'
+        - $ref: '#/parameters/x-aia-request-id'
+        - $ref: "#/parameters/x-page-limit"
+        - in: body
+          name: leadListQuery
+          description: Query string for lead list
+          schema:
+            $ref: '#/definitions/LeadListQuery'
+      responses:
+        '200':
+          description: Successful retrieval of leads information
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Lead'
+          headers:
+            x-total-count:
+              type: string
+              description: Total number of records in the unpaginated set
+        '400':
+          $ref: '#/responses/ClientError400'
+        '401':
+          $ref: '#/responses/GatewayError401'
+        '404':
+          $ref: '#/responses/GWNotFoundError404'
+        '500':
+          $ref: '#/responses/internalError500'
+        '502':
+          $ref: '#/responses/GatewayError502'
+        '503':
+          $ref: '#/responses/GatewayError503'
+        '504':
+          $ref: '#/responses/GatewayError504'
+  /leads/activities:
+    post:
+      tags:
+        - Lead
+      summary: Create the activity
+      description: This operation will create activity in association with respect to Lead ID in the Lead Management System.
+      operationId: leadActivity_post
+      parameters:
+        - $ref: '#/parameters/Authorization'
+        - $ref: '#/parameters/x-aia-request-id'
+        - in: body
+          name: activity
+          description: Data to create a lead activity
+          schema:
+            $ref: '#/definitions/ActivityInfo'
+          required: true
+      responses:
+        '200':
+          description: Successfully created the Activity
+          schema:
+            properties:
+              activityId:
+                type: string
+                description: Activity ID
+            required:
+              - activityId
+        '400':
+          $ref: '#/responses/ClientError400'
+        '401':
+          $ref: '#/responses/GatewayError401'
+        '404':
+          $ref: '#/responses/GWNotFoundError404'
+        '500':
+          $ref: '#/responses/internalError500'
+        '502':
+          $ref: '#/responses/GatewayError502'
+        '503':
+          $ref: '#/responses/GatewayError503'
+        '504':
+          $ref: '#/responses/GatewayError504'
+    put:
+      tags:
+        - Lead
+      summary: Update the activity information
+      description: This operation will update the activity details for a lead in the Lead Management System.
+      operationId: leadActivity_put
+      parameters:
+        - $ref: '#/parameters/Authorization'
+        - $ref: '#/parameters/x-aia-request-id'
+        - in: body
+          name: activity
+          description: Activity information to be updated
+          schema:
+            $ref: '#/definitions/ActivityInfo'
+          required: true
+      responses:
+        '200':
+          description: Successfully updated the activity information
+          schema:
+            properties:
+              status:
+                type: string
+                description: Status of the updating the activity
+            required:
+              - status
+        '400':
+          $ref: '#/responses/ClientError400'
+        '401':
+          $ref: '#/responses/GatewayError401'
+        '404':
+          $ref: '#/responses/GWNotFoundError404'
+        '500':
+          $ref: '#/responses/internalError500'
+        '502':
+          $ref: '#/responses/GatewayError502'
+        '503':
+          $ref: '#/responses/GatewayError503'
+        '504':
+          $ref: '#/responses/GatewayError504'
+  /leads/activities/get-details:
+    post:
+      tags:
+        - Lead
+      summary: Fetch the activity information
+      description: This operation will retrieve the activity details for a lead from the Lead Management System.
+      operationId: leadActivity_get
+      parameters:
+        - $ref: '#/parameters/Authorization'
+        - $ref: '#/parameters/x-aia-request-id'
+        - in: body
+          name: activityQuery
+          description: Activities information to be fetched. 
+          schema:
+            $ref: '#/definitions/ActivityQuery'
+      responses:
+        '200':
+          description: Successful retrieval of activity data
+          schema:
+            $ref: '#/definitions/ActivityInfo'
+        '400':
+          $ref: '#/responses/ClientError400'
+        '401':
+          $ref: '#/responses/GatewayError401'
+        '404':
+          $ref: '#/responses/GWNotFoundError404'
+        '500':
+          $ref: '#/responses/internalError500'
+        '502':
+          $ref: '#/responses/GatewayError502'
+        '503':
+          $ref: '#/responses/GatewayError503'
+        '504':
+          $ref: '#/responses/GatewayError504'  
+  /leads/activities/get-list:
+    post:
+      tags:
+        - Lead
+      summary: Fetch the activity information
+      description: This operation will retrieve the activity details for a lead from the Lead Management System.
+      operationId: leadActivityList_get
+      parameters:
+        - $ref: '#/parameters/Authorization'
+        - $ref: '#/parameters/x-aia-request-id'
+        - in: body
+          name: activityQuery
+          description: Activities List to be fetched for Leads 
+          schema:
+            $ref: '#/definitions/ActivityListQuery'
+      responses:
+        '200':
+          description: Successful retrieval of activity data
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActivityInfo'
+        '400':
+          $ref: '#/responses/ClientError400'
+        '401':
+          $ref: '#/responses/GatewayError401'
+        '404':
+          $ref: '#/responses/GWNotFoundError404'
+        '500':
+          $ref: '#/responses/internalError500'
+        '502':
+          $ref: '#/responses/GatewayError502'
+        '503':
+          $ref: '#/responses/GatewayError503'
+        '504':
+          $ref: '#/responses/GatewayError504'
+  /leads/unlock:
+    post:
+      tags:
+        - Lead
+      summary: Create the Locking status
+      description: This operation will unlock the lead for the bank's customer in Lead Management System.
+      operationId: leadUnlock_post
+      parameters:
+        - $ref: '#/parameters/Authorization'
+        - $ref: '#/parameters/x-aia-request-id'
+        - in: body
+          name: unlock
+          description: Unlock lead information to be updated
+          schema:
+            $ref: '#/definitions/UnlockInfo'
+          required: true
+      responses:
+        '200':
+          description: Successfully updated the lock status information and retrived the leads
+          schema:
+            $ref: '#/definitions/Lead'
+        '400':
+          $ref: '#/responses/ClientError400'
+        '401':
+          $ref: '#/responses/GatewayError401'
+        '404':
+          $ref: '#/responses/GWNotFoundError404'
+        '500':
+          $ref: '#/responses/internalError500'
+        '502':
+          $ref: '#/responses/GatewayError502'
+        '503':
+          $ref: '#/responses/GatewayError503'
+        '504':
+          $ref: '#/responses/GatewayError504'
+    put:
+      tags:
+        - Lead
+      summary: Update the Locking status
+      description: This operation will update the locking status for the bank's customer in Lead Management System.
+      operationId: leadUnlock_put
+      parameters:
+        - $ref: '#/parameters/Authorization'
+        - $ref: '#/parameters/x-aia-request-id'
+        - in: body
+          name: unlock
+          description: Unlock lead information to be updated
+          schema:
+            $ref: '#/definitions/UnlockInfo'
+          required: true
+      responses:
+        '200':
+          description: Successfully updated the lock status information
+          schema:
+            properties:
+              status:
+                type: string
+                description: Status of updating the lock status
+            required:
+              - status
+        '400':
+          $ref: '#/responses/ClientError400'
+        '401':
+          $ref: '#/responses/GatewayError401'
+        '404':
+          $ref: '#/responses/GWNotFoundError404'
+        '500':
+          $ref: '#/responses/internalError500'
+        '502':
+          $ref: '#/responses/GatewayError502'
+        '503':
+          $ref: '#/responses/GatewayError503'
+        '504':
+          $ref: '#/responses/GatewayError504'          
+  /leads/unlock/get-status:
+    post:
+      tags:
+        - Lead
+      summary: Get lead Locking status
+      description: This operation will get the locking status for the seller in Lead Management System.
+      operationId: leadUnlockStatus_post
+      parameters:
+        - $ref: '#/parameters/Authorization'
+        - $ref: '#/parameters/x-aia-request-id'
+        - in: body
+          name: unlockQuery
+          description: Unlock lead information to be updated
+          schema:
+            $ref: '#/definitions/UnlockInfoQuery'
+          required: true
+      responses:
+        '200':
+          description: Successfully get the lock status information
+          schema:
+              $ref: '#/definitions/UnlockInfo'          
+        '400':
+          $ref: '#/responses/ClientError400'
+        '401':
+          $ref: '#/responses/GatewayError401'
+        '404':
+          $ref: '#/responses/GWNotFoundError404'
+        '500':
+          $ref: '#/responses/internalError500'
+        '502':
+          $ref: '#/responses/GatewayError502'
+        '503':
+          $ref: '#/responses/GatewayError503'
+        '504':
+          $ref: '#/responses/GatewayError504'          
+  /leads/dashboard:
+    get:
+      tags:
+        - Lead
+      summary: Fetch the dashboard information
+      description: This operation will retrieve the metrics information of the leads based on the User ID from the Lead Management System.
+      operationId: dashboard_get
+      parameters:
+        - $ref: '#/parameters/Authorization'
+        - $ref: '#/parameters/x-aia-request-id'
+        - in: query
+          name: user-id
+          description: User ID 
+          type: string
+          required: true
+        - in: query
+          name: start-date
+          type: string
+          format: date
+          description: From date in 'DD-mm-yyyy'
+        - in: query
+          name: end-date
+          type: string
+          description: To date in 'DD-mm-yyyy'
+      responses:
+        '200':
+          description: Successfully retrieved the dashboard information
+          schema:
+            $ref: '#/definitions/DashboardInfo'
+        '400':
+          $ref: '#/responses/ClientError400'
+        '401':
+          $ref: '#/responses/GatewayError401'
+        '404':
+          $ref: '#/responses/GWNotFoundError404'
+        '500':
+          $ref: '#/responses/internalError500'
+        '502':
+          $ref: '#/responses/GatewayError502'
+        '503':
+          $ref: '#/responses/GatewayError503'
+        '504':
+          $ref: '#/responses/GatewayError504'
+  /sellers/get-list:
+    post:
+      tags:
+        - Seller
+      summary: Get seller information.
+      description: This operation will retrieve the seller information based on the Supervisor ID.
+      operationId: sellerList_post
+      parameters:
+        - $ref: '#/parameters/Authorization'
+        - $ref: '#/parameters/x-aia-request-id'
+        - $ref: "#/parameters/x-page-limit"
+        - in: body
+          name: sellerListQuery
+          description: Query string for lead list
+          schema:
+            $ref: '#/definitions/SellerQuery'
+      responses:
+        '200':
+          description: Successful retrieval of Seller data
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SellersInfo'
+          headers:
+            x-total-count:
+              type: string
+              description: Total number of records in the unpaginated set
+        '400':
+          $ref: '#/responses/ClientError400'
+        '401':
+          $ref: '#/responses/GatewayError401'
+        '404':
+          $ref: '#/responses/GWNotFoundError404'
+        '500':
+          $ref: '#/responses/internalError500'
+        '502':
+          $ref: '#/responses/GatewayError502'
+        '503':
+          $ref: '#/responses/GatewayError503'
+        '504':
+          $ref: '#/responses/GatewayError504'
+definitions:
+  Lead:
+    type: object
+    properties:
+      client:
+        $ref: '#/definitions/Client'
+      leadDetails:
+        $ref: '#/definitions/LeadsInformation'
+      eligibleProducts:
+        type: array
+        items:
+          $ref: '#/definitions/ProductsInfo'
+      suitableProducts:
+        type: array
+        items:
+          $ref: '#/definitions/ProductsInfo'
+      channelDetails:
+        $ref: '#/definitions/ChannelInformation'
+      otherDetails:
+        $ref: '#/definitions/OtherFieldsInfo'
+      paginationNextLink:
+        type: string
+        description: While using pagination, this  field will provid the next link of the page
+        
+  Client:
+    properties:
+      prefix:
+        type: string
+        description: Title
+        enum:
+          - Mr
+          - Ms
+          - Miss
+          - Mrs
+          - Dr
+          - Atty
+          - Engr
+          - Others
+      firstNm:
+        type: string
+        description: First name
+      middleNm:
+        type: string
+        description: Middle name
+      lastNm:
+        type: string
+        description: Last name
+      admittedAge:
+        type: number
+        description: Age
+      maritalStatus:
+        type: string
+        description: Marital status
+        enum:
+          - Single
+          - Married
+          - Widowed
+          - Separated
+          - Others
+      gender:
+        type: string
+        description: Gender
+        enum:
+          - Male
+          - Female
+          - Others
+      mothersMaidenNm:
+        type: string
+        description: Maiden name
+      birthCity:
+        type: string
+        description: City of birth
+      birthCountry:
+        type: string
+        description: Country of birth
+      nationality:
+        type: string
+        description: Nationality
+      rmClientNo:
+        type: string
+        description: Relationship Manager Client Number
+      relationshipManager:
+        type: string
+        description: Relationship Manager 
+      relationshipCode:
+        type: string
+        description: Relationship code
+      birthDt:
+        type: string
+        format: date
+        description: Date of birth in 'DD-mm-yyyy'
+        example: '25-12-2018'
+      smokerCurrentInd:
+        type: string
+        description: Smoker Status
+        enum:
+          - Smoker
+          - Non-Smoker
+      tin:
+        type: string
+        description: TIN
+      idType:
+        type: string
+        description: ID Type
+        enum:
+          - SSS
+          - GSIS
+          - UMID
+          - Others
+      idNumber:
+        type: string
+        description: ID number
+      address:
+        type: array
+        items:
+          $ref: '#/definitions/Address'
+      phone:
+        type: array
+        items:
+          $ref: '#/definitions/Phone'
+      email:
+        type: array
+        description: Email addresses
+        items:
+          $ref: '#/definitions/Email'
+      financialDetails:
+        $ref: '#/definitions/FinancialInfo'   
+    required:
+      - firstName
+      - lastName
+  Address:
+    properties:
+      addressType:
+        type: string
+        description: Type code of the address
+        enum:
+          - HOME
+          - PERMANENT
+          - BUSINESS
+      addressLine1:
+        type: string
+        description: Address line 1
+      addressLine2:
+        type: string
+        description: Address line 2
+      addressLine3:
+        type: string
+        description: Address line 3
+      addressLine4:
+        type: string
+        description: Address line 4
+      city:
+        type: string
+        description: City
+      district:
+        type: string
+        description: District
+      state:
+        type: string
+        description: State
+      country:
+        type: string
+        description: Country
+      postalCd:
+        type: string
+        description: Postal code
+  Phone:
+    properties:
+      phoneType:
+        type: string
+        description: Type code of the phone
+        enum:
+          - HOME
+          - OFFICE
+          - HANDPHONE
+          - FAX
+          - OTHER
+      countryCd:
+        type: string
+        description: Country code
+        enum:
+          - +886
+          - +60
+          - +63
+          - +852
+          - +65
+          - +62
+          - Others
+      areaCd:
+        type: string
+        description: Area code
+      phoneNumber:
+        type: string
+        description: Phone Number
+  Email:
+    properties:
+      emailType:
+        type: string
+        description: Email type
+        enum:
+          - BUSINESS
+          - PERSONAL
+          - OTHER
+      emailAddress:
+        type: string
+        description: Email address
+  LeadsInformation:
+    properties:
+      leadId:
+        type: string
+        description: ID of the Lead
+      leadType:
+        type: string
+        description: Type of the lead
+        enum:
+          - Mapped
+          - Unmapped
+      leadStage:
+        type: string
+        description: Stage
+        enum:
+          - Open Lead
+          - Consideration
+          - Closed
+      leadActivity:
+        type: string
+        description: Activity to be performed by the agents
+        enum:
+          - Contact Customer
+          - Customer Fact Finding
+          - Quotation
+          - Application Creation
+          - Application Submitted
+          - Customer Not Interested
+          - Wrong Number
+          - Customer not contactable
+      leadReferenceNumber:
+        type: string
+        description: Lead reference number
+      leadAction:
+        type: string
+        description: Action on the lead
+        enum:
+          - Call me back
+          - wrong number
+          - Not contactable
+          - Customer not interested
+          - Customer Interested
+          - Follow up Meeting
+          - Application Submitted
+      leadStatus:
+        type: number
+        description: Leads status
+        enum:
+          - Active
+          - Inactive
+      statusReason:
+        type: number
+        description: Status Reason
+        enum:
+          - Open
+          - Qualified
+          - Disqualified
+      leadStatusSince:
+        type: number
+        description: Status since
+      reasonForRejection:
+        type: string
+        description: reason For Rejection
+      agentNm:
+        type: string
+        description: Name of the seller
+      agentId:
+        type: string
+        description : ID of the seller
+      leadSource:
+        type: string
+        description: Source of the lead
+        enum:
+          - Data Analytics
+          - Walk-in
+          - Referral
+          - Digital Data
+      leadCreator:
+        type: string
+        description: Creator of the lead
+      preferredContactMethod:
+        type: string
+        description: Preferred contact method code
+        enum:
+          - F2F
+          - Email
+          - Phone
+      priority1:
+        type: string
+        description: Priority 1
+      priority2:
+        type: string
+        description: Priority 2
+      priority3:
+        type: string
+        description: Priority 3
+      priority4:
+        type: string
+        description: Priority 4
+      priority5:
+        type: string
+        description: Priority 5
+      priority6:
+        type: string
+        description: Priority 6 
+      primaryNeed:
+        type: string
+        description: Primary need  
+      associatedPolicyNumber:
+        type: string
+        description: Associated Policy Number
+      assignedBy:
+        type: string
+        description: Lead Assigned by
+      assignedById:
+        type: string
+        description: Lead Assigned by ID       
+      referredBy:
+        type: string
+        description: Referred by        
+  ChannelInformation:
+    properties:
+      channelNm:
+        type: string
+        description: Name of the channel
+        enum:
+          - Banca
+          - Broker
+          - Agency
+      partnerAgent:
+        type: string
+        description: Partner corporate agent
+        enum:
+          - Partner
+          - Corporate Agent
+      agentCd:
+        type: string
+        description: Agenet Code          
+      branchCd:
+        type: string
+        description: Branch code
+      branchChoiceNm:
+        type: string
+        description: Branch name
+      branchChoiceCd:
+        type: string
+        description: Branch name        
+      leadScore:
+        type: string
+        description: Lead score
+      leadQualityCode:
+        type: string
+        description: Lead quality code
+        enum:
+          - Hot
+          - Cold
+          - Warm
+      referralCd:
+        type: number
+        description: referral Code
+      campaignCd:
+        type: string
+        description: campaign Code
+  FinancialInfo:
+    properties:
+      annualEarnings:
+        type: string
+        description: Annual income
+        enum:
+          - No Income
+          - Below P100,000
+          - P100,000 - 239,999
+          - P240,000 - 599,999
+          - P600,000 - 959,999
+          - P960,000 - 1,199,999
+          - P1,200,000 - 1,799,999
+          - P1,800,000 - 2,999,999
+          - P3,000,000 - 4,999,999
+          - P5,000,000 and above
+          - Others
+      primaryOccupation:
+        type: string
+        description: Primary occupation
+      natureOfBusiness:
+        type: string
+        description: Nature of business
+      sourcesOfFunds:
+        type: string
+        description: Sources of funds
+        enum:
+          - Salary
+          - Business
+          - Professional Fees
+          - Savings/Investments
+          - Benefits from Maturing BPI-Philam Policy No.
+          - Sales Commissions
+          - Allotment from Seafarer
+          - Remittance from Abroad
+          - Others
+  OtherFieldsInfo:
+    properties:
+      bankUniqueId:
+        type: string
+        description: Bank unique ID
+      applicationNumber:
+        type: string
+        description: Application number
+      employmentCompanyNm:
+        type: string
+        description: employment Company name
+      bankProducts:
+        type: array
+        items:
+          type: string
+          description: It is an item we ask the client to know what else they want aside from insurance
+          enum:
+            - Credit Card
+            - Deposits
+            - Investments
+            - Life Insurance
+            - Auto Loan
+            - Housing Loan
+            - Personal Loan
+            - Business Loan
+            - Remittance
+            - Foreign Exchange
+            - Non-Life Insurance
+            - Choose All
+            - None
+      clientSegment:
+        type: string
+        description: Client segment
+        enum:
+          - Private
+          - Preferred
+          - Personal
+          - Oversreas Filipinos
+          - Corporate HNW
+          - Corporate WSM
+          - Others
+      bankAccount:
+        type: string
+        description: Bank Account number
+      leadProcessingFlag:
+        type: array
+        items:      
+          type: string
+          description: Lead Processing Flag
+          enum:
+            - To IPOS
+            - To Shore
+            - To BPI
+            - To Telemarketing
+      pushedToIPOS:
+        type: string
+        description: Push to IPOS flag. If Yes, data is already pushed to IPOS
+        enum:
+          - Yes
+          - No
+      updatedOnDt:
+        type: string  
+        description: last updated on date for leads, pattern- yyyy-mm-dd'T'hh:MM:ss'Z'
+        format: date-time
+        example: "2019-05-13T10:11:36Z"
+  ProductsInfo:
+    type: object
+    properties:
+      productId:
+        type: string
+        description: Product ID
+      productNm:
+        type: string
+        description: Product name
+      productType:
+        type: string
+        description: Product type
+        enum:
+          - Retirement
+          - Savings
+          - Investment
+          - Protection and Health
+      prodCatg:
+        type: string
+        description: Product category
+        enum:
+          - Non Insurance Products
+          - Insurance Products
+      description:
+        type: string
+        description: Product description
+      propensityScore:
+        type: number
+        format: float
+        description: Propensity score
+      dduwScore:
+        type: number
+        format: float        
+        description: DDUW score
+  LeadQuery:
+    type: object
+    properties:
+      leadId:
+        type: string
+        description: Lead ID
+      leadReferenceNumber:
+        type: string
+        description: Lead reference number
+      selectFields:
+          type: string
+          description: defining the fields for query based result to have partial response for all GET method e.g  for lead API--> clientBase(title;firstName;phone{countryCode/dialNumber}) 
+  LeadListQuery:
+    type: object
+    properties:
+      agentId:
+        type: string
+        description: Seller ID
+      leadNm:
+        type: string
+        description: Lead's first name
+      filter:
+        type: object
+        properties:
+          leadSource:
+            type: array
+            items:
+              type: string
+              description: lead source
+              enum:
+                - Data Analytics
+                - Walk-in
+                - Referral
+                - Digital Data
+          admittedAge:
+            type: array
+            items:
+              type: string
+              description: Admitted Age
+          gender:
+            type: array
+            items:
+              type: string
+              description: gender of the lead
+              enum:
+                - Male
+                - Female
+                - Others
+          productNm:
+            type: array
+            items:
+              type: string
+              description: eligible prodcut name
+          leadStage:
+            type: array
+            items:
+              type: string
+              description: Lead Stage
+              enum:
+                - Open Lead
+                - Consideration
+                - Closed
+      orderByLeadNm:
+        type: string
+        description: oder by lead name
+        enum:
+          - asc
+          - desc
+      orderByUpdated:
+        type: string
+        description: oder by lead name
+        enum:
+          - asc
+          - desc          
+      leadProcessingFlag:
+        type: string
+        description: Lead processing flag
+      selectFields:
+        type: string
+        description: defining the fields for query based result to have partial response for all GET method e.g  for lead API--> clientBase(title;firstName;phone{countryCode/dialNumber})
+      paginationNextLink:
+        type: string
+        description: While using pagination, this  field will provid the next link of the page
+  SellerQuery:
+    type: object
+    properties:
+      supervisorId:
+        type: string
+        description: Supervisor ID
+      sellerNm:
+        type: string
+        description: First Name
+      selectFields:
+        type: string
+        description: defining the fields for query based result to have partial response for all GET method e.g  for Seller API--> (firstNm, birthDt,sellerType)           
+  SellersInfo:
+    type: object
+    properties:
+      firstNm:
+        type: string
+        description: First name
+      lastNm:
+        type: string
+        description: Last name
+      fullNm:
+        type: string
+        description: Full name
+      prefix:
+        type: string
+        description: Prefix
+        enum:
+          - Mr
+          - Ms
+          - Mrs
+          - Dr
+      emailAddress:
+        type: string
+        description: Email address
+      birthDt:
+        type: string
+        format: date
+        description: Date of birth in 'DD-mm-yyyy'
+        example: '25-12-2018'
+      admittedAge:
+        type: number
+        description: Age
+      gender:
+        type: string
+        description: Gender
+        enum:
+          - Male
+          - Female
+      channel:
+        type: string
+        description: Channel
+        enum:
+          - F2F
+          - TM
+      addressLine1:
+        type: string
+        description: Address line 1
+      addressLine2:
+        type: string
+        description: Address line 2
+      addressLine3:
+        type: string
+        description: Address line 3
+      addressLine4:
+        type: string
+        description: Address line 4
+      city:
+        type: string
+        description: City
+      district:
+        type: string
+        description: District
+      state:
+        type: string
+        description: State
+      country:
+        type: string
+        description: Country
+      postalCd:
+        type: string
+        description: Postal code
+      productType:
+        type: string
+        description: Product type
+        enum:
+          - Retirement
+          - Savings
+          - Investment
+          - Protection and Health
+      branchOfAssignment:
+        type: string
+        description: Branch of assignment
+      segmentDesignation:
+        type: string
+        description: Segment designation
+        enum:
+          - Private
+          - Preferred
+          - Personal
+          - OF - Overseas Filipinos
+          - Corporate
+          - DM - Direct Marketing
+      branch:
+        type: string
+        description: Branch
+      channelForContact:
+        type: string
+        description: Channel for contact
+        enum:
+          - F2F
+          - Email
+          - SMS
+          - Phone
+      goodAtLeadSource:
+        type: string
+        description: Good at lead source
+        enum:
+          - Data Analytics
+          - Walk-in
+          - Referral
+          - Digital Data
+      supervisor:
+        type: string
+        description: Supervisor
+      supervisorId:
+        type: string
+        description: Supervisor ID
+      agentId:
+        type: string
+        description: Agent ID
+      sellerType:
+        type: string
+        description: Seller type
+        enum:
+          - AIA
+          - Bank
+      bank:
+        type: string
+        description: Bank
+      ownedLeads:
+        type: array
+        items:
+          type: string
+        description: Owned leads
+      sellerUserType:
+        type: string
+        description: Seller user type
+        enum:
+          - Seller
+          - Lead Generator
+          - Supervisor
+      stateCd:
+        type: string
+        description: Status of Seller, if he is active or inactive
+        enum:
+          - Active
+          - Inactive
+      openLeads:
+        type: number
+        description: Open lead against the seller
+      successfulLead:
+        type: number
+        description: Successful Lead against the seller
+      closedLeads:
+        type: number
+        description: Closed lead against the seller        
+      conversionRate:
+        type: number
+        description: Conversion rate of the seller
+  ActivityInfo:
+    type: object
+    properties:
+      activityNm:
+        type: string
+        description: Activity name
+        enum:        
+          - Contact Customer
+          - Customer Fact Finding
+          - Quotation
+          - Application Creation
+          - Application Submitted
+          - Customer Not Interested
+          - Wrong Number
+          - Customer not contactable        
+      activityId:
+        type: string
+        description: Activity Id
+      originalActivityId:
+        type: string
+        description: Original Activity Id        
+      activityType:
+        type: string
+        description: Activity type
+        enum:
+          - Closed Success
+          - Closed Failure
+          - Note
+          - Call
+          - Regular Task
+          - Undo Task       
+      description:
+        type: string
+        description: Description
+      actionNm:
+        type: string
+        description: Action name
+        enum:
+          - Call me back
+          - Not Contactable
+          - Wrong Number
+          - Customer Not interested
+          - Customer Interested
+          - Follow up Meeting
+          - Application Submitted
+      seller:
+        type: string
+        description: Seller
+      duration:
+        type: number
+        description: Actual duration of the task
+      actualStart:
+        type: string
+        format: date-time
+        description: Actual start of the task
+        example: '2019-02-19T09:38:10Z'
+      actualEnd:
+        type: string
+        format: date-time
+        description: Actual end of the task
+        example: '2019-02-19T09:38:10Z'
+      leadId:
+        type: string
+        description: Lead ID
+      activityStatus:
+        type: string
+        description: Activity status
+      owner:
+        type: string
+        description: Owner
+  ActivityListQuery:
+    type: object
+    properties:
+      leadId:
+        type: string
+        description: Lead ID
+  ActivityQuery:
+    type: object
+    properties:
+      activityId:
+        type: string
+        description: Activity ID
+      leadId:
+        type: string
+        description: Lead ID
+  DashboardInfo:
+    type: object
+    properties:
+      sellerDashboard:
+        $ref: '#/definitions/SellerDashboardInfo'
+      supervisorDashboard:
+        $ref: '#/definitions/SupervisorDashboardInfo'
+      leadGeneratorDashboard:
+        $ref: '#/definitions/LeadGeneratorDashboardInfo'
+  SellerDashboardInfo:
+    type: object
+    properties:
+      leadSuccessCount:
+        type: number
+        description: Lead success count
+      conversionRate:
+        type: number
+        description: Conversion rate
+      leadCountByStage:
+        $ref: '#/definitions/LeadCountByStage'
+      leadCountByFailure:
+        $ref: '#/definitions/LeadCountByFailure'
+  SupervisorDashboardInfo:
+    type: object
+    properties:
+      teamMemberCount:
+        type: number
+        description: Team member count
+      teamConversionRate:
+        type: number
+        description: Team conversion rate
+      seller:
+        type: array
+        items:
+          $ref: '#/definitions/DashboardSellerInfo'
+      teamLeadCount:
+        type: number
+        description: Team lead count
+      teamLeadUnassignedCount:
+        type: number
+        description: Team lead unassigned count
+      leadCountByStage:
+        $ref: '#/definitions/LeadCountByStage'
+      leadCountBySource:
+        $ref: '#/definitions/LeadCountBySource'
+  LeadGeneratorDashboardInfo:
+    type: object
+    properties:
+      leadCountByStage:
+        $ref: '#/definitions/LeadCountByStage'
+      leadCountBySource:
+        $ref: '#/definitions/LeadCountBySource'
+  LeadCountByStage:
+    type: object
+    properties:
+      open:
+        type: number
+        description: Open count
+      consideration:
+        type: number
+        description: In consideration count
+      closed:
+        type: number
+        description: Closed count
+  LeadCountByFailure:
+    type: object
+    properties:
+      wrongNumberCount:
+        type: number
+        description: Wrong number count
+      notContactableCount:
+        type: number
+        description: Not contactable count
+      notInterestedCount:
+        type: number
+        description: Not interested count
+  LeadCountBySource:
+    type: object
+    properties:
+      digital:
+        type: number
+        description: Digital
+      referral:
+        type: number
+        description: Referral
+      analytics:
+        type: number
+        description: Analytics
+      telemarketer:
+        type: number
+        description: Telemarketer
+      walkIn:
+        type: number
+        description: Walk in
+  DashboardSellerInfo:
+    type: object
+    properties:
+      sellerNm:
+        type: string
+        description: Seller name
+      rank:
+        type: string
+        description: Rank
+      leadSuccessCount:
+        type: number
+        description: Lead success count
+  UnlockInfo:
+    type: object
+    properties:
+      leadId:
+        type: string
+        description: Lead ID
+      leadReferenceNumber:
+        type: string
+        description: Lead reference number
+      unlockFlag:
+        type: boolean
+        description: Unlock flag
+      agentId:
+        type: string
+        description: Agent ID
+      agentNm:
+        type: string
+        description: Agent Name        
+      createdDt:
+        type: string
+        format: date
+        description: Created date in 'DD-mm-yyyy'
+        example: '25-12-2018'
+      pushToIPOS:
+        type: string
+        format: date
+        description: Pushed to IPOS
+        enum:
+          - Yes
+          - No
+  UnlockInfoQuery:
+    type: object
+    properties:
+      leadId:
+        type: string
+        description: Lead ID
+      agentId:
+        type: string
+        description: Agent ID
+  Exception:
+    type: object
+    properties:
+      message:
+        type: string
+        description: Detailed description of the error
+      reasonCode:
+        type: string
+        description: Error code
+      reason:
+        type: string
+        description: Reason for the error
+      sourceSystem:
+        type: string
+        description: Name of the system from which error occured

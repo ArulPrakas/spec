@@ -1,0 +1,2437 @@
+---
+
+swagger: '2.0'
+
+
+info:
+
+  x-swagger-file-version: "0.1"
+  version: "0.1"
+  
+  title: Policy Owner Servicing
+  description: |
+    
+    This is the reference API for POS derived from the analysis of POS transactions for 4 BUs (HK, SG, MY, TH)
+    
+    The current API definition is providing only a list of operations (input parameters and responses are not defined)
+    
+host: api.aia.com
+basePath: /il/pos/v1
+schemes:
+  - https
+produces:
+  - application/json
+consumes:
+  - application/json
+  
+parameters:
+
+  InputPlaceholder:
+    name: input
+    description: "Input placeholder"
+    in: header
+    required: true
+    type: string
+
+  X-AIA-Request-Id:
+    in: header
+    name: X-AIA-Request-Id
+    description: A unique id generated for each request for tracking purposes
+    required: true
+    type: string
+  AIA-Access-Token:
+    in: header
+    name: Authorization
+    description: >-
+      An access token issued by an AIA Authorization server. This will have the
+      format Bearer + {space} + {accessToken}. Example: Bearer
+      KGNsaWVudF9pZDpjbGllbnRfc2VjcmV0KQ==
+    required: true
+    type: string
+
+responses:
+  HTTPError400:
+    description: Bad Request
+    schema:
+      $ref: '#/definitions/Exception'
+  HTTPError401:
+    description: Unauthorized
+    schema:
+      $ref: '#/definitions/Exception'
+  HTTPError405:
+    description: Method Not Allowed
+    schema:
+      $ref: '#/definitions/Exception'
+  HTTPError406:
+    description: Not Acceptable
+    schema:
+      $ref: '#/definitions/Exception'
+  HTTPError500:
+    description: >-
+      Internal Server Error
+
+      <table class="table table-striped table-bordered"> <thead> <tr>
+      <th>ReasonCode</th> <th>Reason</th> <th>Message</th> </tr> </thead>
+      <tbody> <tr> <td>502</td> <td>Bad Gateway</td> <td>Service is down or
+      being upgraded</td> </tr> <tr> <td>503</td> <td>Service Unavailable</td>
+      <td>Service is up, but overloaded with requests</td> </tr> <tr>
+      <td>504</td> <td>Gateway Timeout</td> <td>Servers are up, but the
+      request   couldn’t be serviced due to some failure within our stack</td>
+      </tr> </tbody> </table>
+    schema:
+      $ref: '#/definitions/Exception'
+
+paths:
+
+################################################################################
+# Policy
+################################################################################
+
+  /policies:
+    get:
+      tags: 
+        - Policy
+      summary: Get a list of policy for a customer
+      operationId: Policies_get
+      description: |
+        
+        Get a list of policy for a customer
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /policies/beneficiary:
+    get:
+      tags: 
+        - Policy
+      summary: Get current beneficiary of a policy
+      operationId: PoliciesBeneficiary_get
+      description: |
+        
+        Get current beneficiary of a policy
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+    put:
+      tags: 
+        - Policy
+      summary: Change the appointment of nominee, trustee or to revoke current nominations
+      operationId: PoliciesBeneficiary_post
+      description: |
+        
+        Change the appointment of nominee, trustee or to revoke current nominations
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /policies/reinstatement:
+    post:
+      tags: 
+        - Policy
+      summary: Policy reinstatement
+      operationId: PoliciesReinstatement_post
+      description: |
+        
+        Policy reinstatement
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /policies/riders:
+    get:
+      tags: 
+        - Policy
+      summary: Get rider lists associate with a policy
+      operationId: PoliciesRiders_get
+      description: |
+        
+        Get current beneficiary of a policy
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+    put:
+      tags: 
+        - Policy
+      summary: Change rider lists
+      operationId: PoliciesRiders_put
+      description: |
+        
+        Change rider lists
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /policies/riders/full-list:
+    get:
+      tags: 
+        - Policy
+      summary: Get full list of available riders
+      operationId: PoliciesRidersFullList_get
+      description: |
+        
+         Get full list of available riders
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /policies/surrender:
+    post:
+      tags: 
+        - Policy
+      summary: Request to surrender investment linked / universal life plan policy
+      operationId: PoliciesSurrender_post
+      description: |
+        
+         Request to surrender investment linked / universal life plan policy
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /policies/cancellation:
+    post:
+      tags: 
+        - Policy
+      summary: Policy cancellation (other than free look)
+      operationId: PoliciesCancellation_post
+      description: |
+        
+         Policy cancellation (other than free look)
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /policies/cancellation/freelook:
+    post:
+      tags: 
+        - Policy
+      summary: Policy cancellation during freelook period
+      operationId: PoliciesCancellationFreelook_post
+      description: |
+        
+         Policy cancellation during freelook period
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK         
+
+  /policies/owner:
+    get:
+      tags: 
+        - Policy
+      summary: Get policy owner
+      operationId: PoliciesOwner_get
+      description: |
+        
+        Get policy owner
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+    put:
+      tags: 
+        - Policy
+      summary: Change policy owner
+      operationId: PoliciesOwner_put
+      description: |
+        
+        * Change the ownership/trustee
+        * Apply contingent owner to the policy
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /policies/owner/vesting-rights:
+    put:
+      tags: 
+        - Policy
+      summary: Change policy owner to the insured in case when the insured reaches 21 yrs old
+      operationId: PoliciesOwnerVestingRights_put
+      description: |
+        
+        Change policy owner to the insured in case when the insured reaches 21 yrs old
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+          
+  /policies/funds:
+    get:
+      tags: 
+        - Policy
+      summary: Get list of funds associated with a policy
+      operationId: PoliciesFunds_get
+      description: |
+        
+        Get list of funds associated with a policy
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /policies/funds/full-list:
+    get:
+      tags: 
+        - Policy
+      summary: Get a full list of available funds 
+      operationId: PoliciesFundsFullList_get
+      description: |
+        
+        Get a full list of available funds 
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK        
+
+  /policies/funds/auto-rebalancing:
+    get:
+      tags: 
+        - Policy
+      summary: Get current settings for auto rebalancing of the fund allocation
+      operationId: PoliciesFundsAutoRebalancing_get
+      description: |
+        
+        Get current settings for auto rebalancing of the fund allocation
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+    put:
+      tags: 
+        - Policy
+      summary: Change setting for auto rebalancing of the fund allocation
+      operationId: PoliciesFundsAutoRebalancing_put
+      description: |
+        
+        Change setting for auto rebalancing of the fund allocation
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /policies/funds/switch:
+    post:
+      tags: 
+        - Policy
+      summary: Ad hoc fund switch - change fund type or weighting of portfolio in unit linked policy
+      operationId: PoliciesFundsSwitch
+      description: |
+        
+        Ad hoc fund switch - change fund type or weighting of portfolio in unit linked policy
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK   
+
+  /policies/funds/switch/schedule:
+    get:
+      tags: 
+        - Policy
+      summary: Get current settings for scheduled fun switch
+      operationId: PoliciesFundsSwitchSechdule_get
+      description: |
+        
+        Get current settings for scheduled fund switch
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+    put:
+      tags: 
+        - Policy
+      summary: Change settings for scheduled fun switch
+      operationId: PoliciesFundsSwitchSechdule_put
+      description: |
+        
+        Change settings for scheduled fund switch
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /policies/funds/allocate-premium:
+    post:
+      tags: 
+        - Policy
+      summary: Allocate fund for upcoming premium
+      operationId: PoliciesFundsAllocatePremium_post
+      description: |
+        
+        Allocate fund for upcoming premium
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+
+  /policies/funds/new-product-offer/convert:
+    post:
+      tags: 
+        - Policy
+      summary: Convert current plan / rider to new business
+      operationId: PoliciesFundsNewProdcutOfferConvert_post
+      description: |
+        
+        Convert current plan /rider to new business
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+
+  /policies/funds/new-product-offer/transfer-in:
+    post:
+      tags: 
+        - Policy
+      summary: CEO/RH Transfer In (policy to rider)
+      operationId: PoliciesFundsNewProdcutOfferTransferIn_post
+      description: |
+        
+        CEO/RH Transfer In (policy to rider)
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+
+  /policies/funds/new-product-offer/cipg:
+    post:
+      tags: 
+        - Policy
+      summary: PO offer rider (Critical Illness PLUS GOLD)
+      operationId: PoliciesFundsNewProdcutOfferCIPG_post
+      description: |
+        
+        PO offer rider (Critical Illness PLUS GOLD)
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /policies/coverage:
+    get:
+      tags: 
+        - Policy
+      summary: Get coverage
+      operationId: PoliciesCoverage_get
+      description: |
+        
+        Get coverage
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+    put:
+      tags: 
+        - Policy
+      summary: Change coverage
+      operationId: PoliciesCoverage_put
+      description: |
+        
+        Change coverage
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+ 
+  /policies/plan:
+    get:
+      tags: 
+        - Policy
+      summary: Get product plan
+      operationId: PoliciesPlan_get
+      description: |
+        
+        Get product plan
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+    put:
+      tags: 
+        - Policy
+      summary: Change product plan
+      operationId: PoliciesPlan_put
+      description: |
+        
+        Change product plan
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /policies/sum-assured:
+    get:
+      tags: 
+        - Policy
+      summary: Get sum assrued for a policy
+      operationId: PoliciesSumAssured_get
+      description: |
+        
+        Get sum assrued for a policy
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+    put:
+      tags: 
+        - Policy
+      summary: Change sum assrued for a policy (recaluclation requried)
+      operationId: PoliciesSumAssured_put
+      description: |
+        
+        Change sum assrued for a policy (recaluclation requried)
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /policies/sum-assured/premium:
+    post:
+      tags: 
+        - Policy
+      summary: Change the regular premium amount
+      operationId: PoliciesSumAssuredPremium_post
+      description: |
+        
+        Change the regular premium amount
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK 
+
+  /policies/auto-renew:
+    post:
+      tags: 
+        - Policy
+      summary: Auto renew policy with Agent account balance
+      operationId: PoliciesAutoRenew_post
+      description: |
+        
+        Auto renew policy with Agent account balance
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /policies/medical-status:
+    get:
+      tags: 
+        - Policy
+      summary: Get curent medical status (See PUT)
+      operationId: PoliciesMedicalStatus_get
+      description: |
+        
+        Get curent medical status (See PUT)
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+    put:
+      tags: 
+        - Policy
+      summary: Change medical status
+      operationId: PoliciesMedicalStatus_put
+      description: |
+        
+        Change medical status:
+         - Adjust medical rating and exclusion
+         - Update non-disclosed information for insured, policy owner, family member and/or spouse
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /policies/medical-rating-offer:
+    post:
+      tags: 
+        - Policy
+      summary: Offer discount premium on existing policy based on the new rating on NB
+      operationId: PoliciesMedicalRatingOffer_post
+      description: |
+        
+        Offer discount premium on existing policy based on the new rating on NB
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /policies/convert-premium-payment:
+    post:
+      tags: 
+        - Policy
+      summary: Application to cease premium payment and convert to "ETI (Extended Term Insurance)" or " RPU (Reduced Paid Up)"
+      operationId: PoliciesConvertPremiumPayment_post
+      description: |
+        
+        Application to cease premium payment and convert to "ETI (Extended Term Insurance)" or " RPU (Reduced Paid Up)"
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /policies/dependents:
+    get:
+      tags: 
+        - Policy
+      summary: Get dependent list
+      operationId: PoliciesDependents_get
+      description: |
+        
+        Get dependent list
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+    put:
+      tags: 
+        - Policy
+      summary: Change dependent list
+      operationId: PoliciesDependents_put
+      description: |
+        
+        Change dependent list
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /policies/assignment/shift:
+    post:
+      tags: 
+        - Policy
+      summary: Shift the ownership of insurance policy to another party
+      operationId: PoliciesAssignmentShift_post
+      description: |
+        
+        Shift the ownership of insurance policy to another party
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+          
+  /policies/assignment/release:
+    post:
+      tags: 
+        - Policy
+      summary: Return back the ownership of insurance policy from previous assignee
+      operationId: PoliciesAssignmentRelease_post
+      description: |
+        
+        Return back the ownership of insurance policy from previous assignee
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+          
+  /policies/assignment/collateral:
+    post:
+      tags: 
+        - Policy
+      summary: Set a conditional assignment appointing a lender as the primary beneficiary of a death benefit to use as collateral for a loan
+      operationId: PoliciesAssignmentCollateral_post
+      description: |
+        
+        Set a conditional assignment appointing a lender as the primary beneficiary of a death benefit to use as collateral for a loan
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /policies/vitality/discount:
+    post:
+      tags: 
+        - Policy
+      summary: Apply vitality premium discount
+      operationId: PoliciesVitalityDiscounts_post
+      description: |
+        
+        Apply vitality premium discount
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK       
+          
+################################################################################
+# Customer
+################################################################################
+
+  /customers:
+    get:
+      tags: 
+        - Customer
+      summary: Get customers particulars (See PUT operation)
+      operationId: Customers_get
+      description: |
+        
+        Get customers particulars (See PUT operation)
+        
+        <table class="table table-striped table-bordered">
+          <thead> 
+            <tr>
+              <th>Column 1</th> 
+              <th>Column 2</th> 
+            </tr>
+          </thead>
+          <tbody> 
+            <tr> 
+              <td>Not working</td> 
+              <td>Not Working</td> 
+            </tr> 
+          </tbody> 
+        </table>
+                  
+      parameters:
+        - $ref: '#/parameters/AIA-Access-Token'
+        - $ref: '#/parameters/X-AIA-Request-Id'
+
+        
+      responses:
+        "200":
+          description:  OK
+          schema:
+            $ref: '#/definitions/RetrieveCustomerDetailsResponse'
+        '400':
+          $ref: '#/responses/HTTPError400'
+        '401':
+          $ref: '#/responses/HTTPError401'
+        '405':
+          $ref: '#/responses/HTTPError405'
+        '406':
+          $ref: '#/responses/HTTPError406'
+        '500':
+          $ref: '#/responses/HTTPError500'
+
+    put:
+      tags: 
+        - Customer
+      summary: Change customers particulars 
+      operationId: Customers_put
+      description: |
+        
+        Change customer particulars
+         - Change address/Telephone/E-mail
+         - Update acknowledgment of address proof
+         - Update contact information for 2FA authentication
+         - Change the ID/Passport info for insured and/or owner
+         - Update age change for insured and/or owner
+         - Change of DOB for insured and/or owner
+         - Change of sex for insured and/or owner
+         - Change occupation rating, or occupation for insured and/or owner
+         - Change name of insured and/or owner
+        
+         * Depending on input/output/documtation reuqirements, may need to split into individual calls for certain requests 
+        
+         * Some requests may require underwriting, e.g. change of occupation, age 
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /customers/signature:
+    put:
+      tags: 
+        - Customer
+      summary: Change signature
+      operationId: CustomersSignature_post
+      description: |
+        
+        Change signature
+      
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+ 
+  /customers/consents/marketing:
+    get:
+      tags: 
+        - Customer
+      summary: Get current settings for market consents
+      operationId: CustomersConsentsMarketing_get
+      description: |
+        
+        Get settings for market consents
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+    put:
+      tags: 
+        - Customer
+      summary: Change settings for market consents  
+      operationId: CustomersConsentsMarketing_put
+      description: |
+        
+        Change settings for market consents 
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /customers/eadvice/settings:
+    get:
+      tags: 
+        - Customer
+      summary: Get current eAdvice settings
+      operationId: CustomersEadviceSettings_get
+      description: |
+        
+        Get settings for market consents
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+    put:
+      tags: 
+        - Customer
+      summary: Change  eAdvice settings 
+      operationId: CustomersEadviceSettings_put
+      description: |
+        
+        Change eAdvice settings
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /customers/banking/autopay:
+    get:
+      tags: 
+        - Customer
+      summary: Get current autopay settings
+      operationId: CustomersBankingAutopay_get
+      description: |
+        
+        Get settings for market consents
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+    put:
+      tags: 
+        - Customer
+      summary: Change autopay settings
+      operationId: CustomersBankingAutopay_put
+      description: |
+        
+        Change autopay settings
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+ 
+  /customers/banking/account:
+    post:
+      tags: 
+        - Customer
+      summary: Register customer's bank account for future benefit outbound payment
+      operationId: CustomersBankingAccount_post
+      description: |
+        
+        Register customer's bank account for future benefit outbound payment
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /customers/compliance/facta:
+    post:
+      tags: 
+        - Customer
+      summary: Capture of FATCA declaration
+      operationId: CustomersComplianceFACTA_post
+      description: |
+        
+        Capture of FATCA declaration
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /customers/compliance/crs:
+    post:
+      tags: 
+        - Customer
+      summary: CRS (Common Reporting Standard; Singapore internal tax compliance agreements)
+      operationId: CustomersComplianceCRS_post
+      description: |
+        
+        CRS (Common Reporting Standard; Singapore internal tax compliance agreements)
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /customers/compliance/kyc:
+    post:
+      tags: 
+        - Customer
+      summary: Process of identifying and verifying the identity of customer
+      operationId: CustomersComplianceKYC_post
+      description: |
+        
+        Process of identifying and verifying the identity of customer
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /customers/compliance/edd:
+    post:
+      tags: 
+        - Customer
+      summary: Capture of EDD (Enhanced Due Diligence) information
+      operationId: CustomersComplianceEDD_post
+      description: |
+        
+        Capture of EDD (Enhanced Due Diligence) information
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /customers/agent:
+    get:
+      tags: 
+        - Customer
+      summary: Get servicing agent/broker
+      operationId: PoliciesAgent_get
+      description: |
+        
+        Get servicing agent/broker
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+    put:
+      tags: 
+        - Customer
+      summary: Change servicing agent/broker
+      operationId: PoliciesAgent_put
+      description: |
+        
+        Change servicing agent/broker
+        
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+        
+################################################################################
+# Payment
+################################################################################
+
+  /premiums/payment/mode:
+    get:
+      tags: 
+        - Premium
+      summary: Get mode of payment (monthly, quarterly, semi-annually, annually)
+      operationId: PremiumsPaymentMode_get
+      description: |
+        
+        Get mode of payment (monthly, quarterly, semi-annually, annually) 
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+    put:
+      tags: 
+        - Premium
+      summary: change mode of payment (monthly, quarterly, semi-annually, annually)
+      operationId: PremiumsPaymentMode_post
+      description: |
+        
+        Get mode of payment (monthly, quarterly, semi-annually, annually) 
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK          
+
+  /premiums/payment/autopay:
+    get:
+      tags: 
+        - Premium
+      summary: Get current autopay setting for non-monthly mode
+      operationId: PremiumsPaymentAutopay_get
+      description: |
+        
+        Get current autopay setting for non-monthly mode
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+    post:
+      tags: 
+        - Premium
+      summary: Apply for autopay for non-monthly mode (need new DDA)
+      operationId: PremiumsPaymentAutopay_post
+      description: |
+        
+        Apply for autopay for non-monthly mode (need new DDA)
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+    put:
+      tags: 
+        - Premium
+      summary: Change autopay setting for non-monthly mode
+      operationId: PremiumsPaymentAutopay_put
+      description: |
+        
+        Change autopay setting for non-monthly mode
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /premiums/payment/payor:
+    get:
+      tags: 
+        - Premium
+      summary: Get current payor
+
+      operationId: PremiumsPaymentPayor_get
+      description: |
+        
+        Get current payor
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+    put:
+      tags: 
+        - Premium
+      summary: Change payor for juvenile case such as change from father as payor to mother as payor
+
+      operationId: PremiumsPaymentPayor_put
+      description: |
+        
+        To change payor for juvenile case such as change from father as payor to mother as payor
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+          
+
+  /premiums/topup:
+    post:
+      tags: 
+        - Premium
+      summary: Request unscheduled top up premium / add lump sum premium
+      operationId: PremiumsTopup_post
+      description: |
+        
+        Request unscheduled top up premium / add lump sum premium
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /premiums/topup/schedule:
+    get:
+      tags: 
+        - Premium
+      summary: Get current scheduled top up premium setting
+      operationId: PremiumsTopupSchedule_get
+      description: |
+        
+        Get current scheduled top up premium setting
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+        
+    put:
+      tags: 
+        - Premium
+      summary: Change scheduled top up premium setting
+      operationId: PremiumsTopupSchedule_put
+      description: |
+        
+        Change scheduled top up premium setting
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /premiums/holiday:
+    get:
+      tags: 
+        - Premium
+      summary: Get current premium holiday setting
+      operationId: PremiumsHoliday_get
+      description: |
+        
+        Get current premium holiday setting
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+        
+    put:
+      tags: 
+        - Premium
+      summary: Chnage premium holiday setting
+      operationId: PremiumsHoliday_put
+      description: |
+        
+        Chnage premium holiday setting
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /premiums/offset/transfer:
+    post:
+      tags: 
+        - Premium
+      summary: Premium offset for the different policy from any money credited
+      operationId: PremiumsOffsetTransfer_post
+      description: |
+        
+        Premium offset for the different policy from any money credited
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+          
+  /premiums/offset/options:
+    get:
+      tags: 
+        - Premium
+      summary: Get current options for premium offset for the same policy from any money credited
+
+      operationId: PremiumsOffsetOptions_get
+      description: |
+        
+        Get current premium holiday setting
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+        
+    put:
+      tags: 
+        - Premium
+      summary: Change options for premium offset for the same policy from any money credited
+
+      operationId: PremiumsOffsetOptions_put
+      description: |
+        
+        Change options for premium offset for the same policy from any money credited
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+################################################################################
+# Payout
+################################################################################
+          
+  /payouts/coupon/options:
+    get:
+      tags: 
+        - Payout
+      summary: Get current coupon options
+
+      operationId: PayoutsCouponOptions_get
+      description: |
+        
+        Get current coupon options
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+    put:
+      tags: 
+        - Payout
+      summary: Change coupon options
+
+      operationId: PayoutsCouponOptions_put
+      description: |
+        
+        Change couplon options: 
+          - Opt in / out for maturity transfer to NB or other policies
+          - Change coupon payout option (Cash payout / deposit)
+          - Use up coupon balance in maturity
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /payouts/coupon/deposit:
+    post:
+      tags: 
+        - Payout
+      summary: Deposit coupon for future use
+
+      operationId: PayoutsCouponDeposit_post
+      description: |
+        
+        Deposit coupon for future use
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /payouts/coupon/pay:
+    post:
+      tags: 
+        - Payout
+      summary: Application for using coupon to pay another premium of another policy
+
+      operationId: PayoutsCouponPay_post
+      description: |
+        
+        Application for using coupon to pay another premium of another policy
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /payouts/dividend/options:
+    get:
+      tags: 
+        - Payout
+      summary: Get current dividend / endowment option
+
+      operationId: PayoutsDividendOptions_get
+      description: |
+        
+        Get current dividend / endowment option
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+    put:
+      tags: 
+        - Payout
+      summary: Change the option for dividend / endowment option (cash payment, accumulation, premium deduction, paid up additions, loan reduction)
+
+      operationId: PayoutsDividendOptions_put
+      description: |
+        
+        Change the option for dividend / endowment option (cash payment, accumulation, premium deduction, paid up additions, loan reduction)
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /payouts/dividend/terminate:
+    post:
+      tags: 
+        - Payout
+      summary: Terminate dividend / Bonus payment option
+
+      operationId: PayoutsDividendTerminate_post
+      description: |
+        
+        Terminate dividend / Bonus payment option
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+          
+################################################################################
+# Outbound Payment
+################################################################################
+
+  /outbound-payments/loan:
+    post:
+      tags: 
+        - Outbound Payment
+      summary: Policy loan application
+      operationId: OutboundPaymentsLoan_post
+      description: |
+      
+        Policy loan application  
+          
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /outbound-payments/loan/interests/waive:
+    post:
+      tags: 
+        - Outbound Payment
+      summary: Request to waive "Automatic Premium Loan" (APL) interest
+      operationId: OutboundPaymentsLoanInterestswaive_post
+      description: |
+      
+        Request to waive "Automatic Premium Loan" (APL) interest 
+          
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /outbound-payments/withdrawal:
+    post:
+      tags: 
+        - Outbound Payment
+      summary: Request to waive "Automatic Premium Loan" (APL) interest
+      operationId: OutboundPaymentsWithdrawal_post
+      description: |
+      
+        Withdrawal appiication:
+          - Policy benefits (partial) - Cash value, Dividend, Future Premium Deposit Account, Coupon
+          - Matured value + interests 
+          
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /outbound-payments/cheque/void:
+    post:
+      tags: 
+        - Outbound Payment
+      summary: Void cheque issued by AIA (Maturity, dividend, claims, etc)
+
+      operationId: OutboundPaymentsChequeVoid_post
+      description: |
+        
+        Void cheque issued by AIA (Maturity, dividend, claims, etc)
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /outbound-payments/cheque/apply:
+    post:
+      tags: 
+        - Outbound Payment
+      summary: Apply to pick up cheque by customer (coupon, dividend, maturity)
+
+      operationId: OutboundPaymentsChequeApply_post
+      description: |
+        
+        Apply to pick up cheque by customer (coupon, dividend, maturity)
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /outbound-payments/cheque/reissue:
+    post:
+      tags: 
+        - Outbound Payment
+      summary: Reissue cheque for expired one or rewrite the name of payee
+
+      operationId: OutboundPaymentsChequeReissue_post
+      description: |
+        
+        Reissue cheque for expired one or rewrite the name of payee
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+          
+  /outbound-payments/cheque/prove:
+    post:
+      tags: 
+        - Outbound Payment
+      summary: Prove the cheque to be deposited
+
+      operationId: OutboundPaymentsChequeProve_post
+      description: |
+        
+        Prove the cheque to be deposited
+                
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+          
+################################################################################
+# Communication                              
+################################################################################
+
+  /communications/policy:
+    get:
+      tags: 
+        - Communication
+      summary: Request for policy reprint
+      operationId: CommunicationsPolicy_get
+      description: |
+      
+        Digitalized request to trigger policy reprint
+        
+        * Depending on user journey, policy can be sent to customer through email or made available for immediate download in same login session  
+          
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /communications/card:
+    get:
+      tags: 
+        - Communication
+      summary: Request for medical card
+      operationId: CommunicationsCard_get
+      description: |
+      
+        Digitalized request for medical card
+          
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /communications/card/convert:
+    post:
+      tags: 
+        - Communication
+      summary: Request for medical card conversion
+      operationId: CommunicationsCardConvert_post
+      description: |
+      
+        Digitalized request for conversion of Medical card 
+          
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+  /communications/estatement:
+    get:
+      tags: 
+        - Communication
+      summary: Request to trigger generation of miscellaneous eStatements
+      operationId: CommunicationsEstatement_get
+      description: |
+      
+        Digitalized request to trigger generation of miscellaneous eStatements:
+         - Loan History 
+         - Written Inquiry
+         - Life billing notice
+         - History (Dividend / Coupon)
+         - Freelook letter
+         - Anniversary statement
+         - Divident statement
+         - FPDF statement
+         - Loan statement (Loan/Coupon/RB/Div)
+         - Premium statement
+          
+      parameters:
+        - $ref: '#/parameters/InputPlaceholder'
+      responses:
+        "200":
+          description:  OK
+
+definitions:
+  
+  Exception:
+    type: object
+    properties:
+      message:
+        type: string
+      reasonCode:
+        type: string
+      reason:
+        type: string
+
+  sortRequest:
+    type: object
+    properties: 
+      order: 
+        type: string
+      sortKey: 
+        type: string
+ 
+  RetrieveCustomerListResponse:
+    type: object
+    properties:
+      
+      sortResponse:
+        $ref: "#/definitions/sortRequest"
+     
+      
+      
+        
+      paginationResult: 
+        type: object
+        properties: 
+         count: 
+          type: string
+         position: 
+          type: string
+         totalCount: 
+          type: string  
+          
+      coreParty: 
+        type: array
+        items:
+          description: "This entity represents demographic information about person or organization, i.e. party.   It does not include internal organization of the company.  It contains the golden records created from MDM as well as the unconsolidated records from source systems."
+          properties: 
+            alertReceiverName: 
+              type: string
+              description: "Person/Department name, to whom an attention alert needs to be given"
+            annualIncomeAmount: 
+              type: string
+              description: "Annual income."
+            annualIncomeRangeCode: 
+              type: string
+              description: "Annual Income Range"
+            bankruptcyFlag: 
+              type: string
+              description: "Whether the Party has became bankrupt , determined by credit organizations like Bank, credit bureau etc."
+            birthDate: 
+              type: string
+              description: "Birth date of individual"
+            companyCode: 
+              type: string
+              description: "Company code.   It is used when the source system segregate the policy by internal company."
+            coreDBPartyId: 
+              type: string
+              description: "Unique ID in Core DB that identifies the party"
+            countryOfResidenceCode: 
+              type: string
+              description: "Country of a person' s citizenship or country in which the person is deemed a national currently."
+            deathDate: 
+              type: string
+              description: "Date of Death"
+            deceasedFlag: 
+              type: string
+              description: "Indicates whether an individual is deceased."
+            displayNameFormat: 
+              type: string
+              description: "Format to Display Name. 1=LAST NAME + FIRST NAME, 2=FIRST NAME + last name"
+            educationLevelCode: 
+              type: string
+              description: "Education level code. For example, HSC (High school), GRD (Graduate level), etc."
+            entityCode: 
+              type: string
+              description: "Entity code that this record belongs to."
+            firstName: 
+              type: string
+              description: "First name of an individual."
+            form60Flag: 
+              type: string
+              description: "India only.  Indicator for Form 60 has been filed if PAN number is not available (PAN number is stored in Central Tax No)."
+            fraudCode: 
+              type: string
+              description: "Tracks the result of investigation decision . Values can be PF - Proven Fraud (After Investigation), NF - No Fraud (After Investigation), AF - Partial Fraud (After Investigation)"
+            genderCode: 
+              type: string
+              description: "Gender code"
+            geoDemographicCode: 
+              type: string
+              description: "Geo demographic code, which is derived from the geographic and demographic details of an individual. Note on RLS: Apply to owner, insured and assignee for storing policy location"
+            heightMtr: 
+              type: string
+              description: "Height in Meter"
+            identityProofIndicator: 
+              type: string
+              description: "Indicate if ID proof has been provided."
+            lastName: 
+              type: string
+              description: "Last name of an individual.  Used as full name if the source does not have other name part. IF the party type code = 'C' (Corporate) then LastName = OrganizationName"
+            localDisplayNameFormat: 
+              type: string
+              description: "Format to Display Name. 1=LAST NAME + FIRST NAME, 2=FIRST NAME + last name"
+            localFirstName: 
+              type: string
+              description: "Local First name of an individual."
+            localLastName: 
+              type: string
+              description: "Local Last name of an individual.  Used as fullname if the source does not have other name part."
+            localMiddleName: 
+             type: string
+            maritalStatusCode: 
+              type: string
+              description: "Marital status code. For example, married, unmarried, etc."
+            masterIndividualId: 
+              type: string
+            middleName: 
+              type: string
+              description: "Middle name"
+            nationalityCode: 
+              type: string
+              description: "Nationality of the individual"
+            occupationClassCode: 
+              type: string
+              description: "Occupation class code"
+            partyId: 
+              type: string
+              description: "Unique ID in source system that identifies the party"
+            partyStatusCode: 
+              type: string
+              description: "This field captures the status of the client's."
+            partyTypeCode: 
+              type: string
+              description: "Individual or Organization"
+            
+            preferredContactMethodCode: 
+              type: string
+              description: "Preferred contact method."
+            primaryLanguageCode: 
+              type: string
+              description: "Primary language code."
+            salutationText: 
+              type: string
+              description: "Salutation used for letters, etc."
+            smokingHabitFlag: 
+              type: string
+            sourceSystemCode: 
+              type: string
+              description: "The source system ID that holds the detail of this record"
+            sourceofIncome: 
+              type: string
+              description: "Source of Income"
+            specialCaseCode: 
+              type: string
+            specialNeedCode: 
+              type: string
+              description: "Special need code. For example, Deaf, Partially sighted, Blind, etc."
+            staffFlag: 
+              type: string
+            staffNumber: 
+              type: string
+            vipFlag: 
+              type: string
+              
+            weightKg: 
+              type: string
+              description: "Weight in Kilogram"
+            LOBCode: 
+              type: string
+              description: "LOB Code"
+         
+          
+            
+          
+      
+            
+  RetrieveCustomerDetailsResponse:
+    type: object
+    properties:
+      
+      coreParty:
+        $ref: '#/definitions/Party'
+  Party:
+    type: object
+    description: "This entity represents demographic information about person or organization, i.e. party.   It does not include internal organization of the company.  It contains the golden records created from MDM as well as the unconsolidated records from source systems."
+    properties: 
+      age: 
+        type: string
+        description: "Age of party"
+      alertReceiverName: 
+        type: string
+        description: "Person/Department name, to whom an attention alert needs to be given"
+      socialSecurityNumber:
+        type: string
+        description: Social Security Number
+
+
+      passportNumber:
+        type: string
+        description: Passport Number
+      idDocumentTypeCode:
+        type: string
+      localFirstName:
+        type: string
+        description: Local First Name
+      localLastName:
+        type: string
+        description: Local Last Name
+      localDisplayNameFormat:
+        type: string
+        description: Local Display Name Format
+      birthDate: 
+        type: string
+        description: "Birth date of individual"
+      coreDBPartyId: 
+        type: string
+        description: "Unique ID in Core DB that identifies the party"
+      displayNameFormat: 
+        type: string
+        description: "Format to Display Name. 1=LAST NAME + FIRST NAME, 2=FIRST NAME + last name"
+      electronicContacts: 
+        $ref: "#/definitions/ElectronicContact"
+      firstName: 
+        type: string
+        description: "First name of an individual."
+      genderCode: 
+        type: string
+        description: "Gender code"
+      idDocumentNumber:
+        type: string
+        description: "ID Document Number"      
+      geoDemographicCode: 
+        type: string
+        description: "Geo demographic code, which is derived from the geographic and demographic details of an individual. Note on RLS: Apply to owner, insured and assignee for storing policy location"
+      lastName: 
+        type: string
+        description: "Last name of an individual.  Used as full name if the source does not have other name part. IF the party type code = 'C' (Corporate) then LastName = OrganizationName"
+      masterIndividualId: 
+        type: string
+        description: "Master Individual Id"
+      marketableFlag: 
+        type: string
+        description: "Marketable Flag"
+      middleName: 
+        type: string
+        description: "Middle name"
+      occupationClassCode: 
+        type: string
+        description: "Occupation class code"
+      partyId: 
+        type: string
+        description: "Unique ID in source system that identifies the party"
+
+      partyTypeCode: 
+        type: string
+        description: "Individual or Organization"
+      physicalContacts: 
+        $ref: "#/definitions/PhysicalContact"
+      primaryLanguageCode: 
+        type: string
+        description: "Primary language code."
+      salutationText: 
+        type: string
+        description: "Salutation used for letters, etc."
+      smokingHabitFlag: 
+        type: string
+      telephoneContacts: 
+        $ref: "#/definitions/TelephoneContact" 
+
+  PhysicalContact: 
+    type: array
+    items:
+      description: "This entity represents physical addresses (geographical) for party."
+      properties: 
+       addressLine1: 
+        type: string
+        description: "Address Line 1"
+       addressLine2: 
+        type: string
+        description: "Address Line 2"
+       addressLine3: 
+        type: string
+        description: "Address Line 3"
+       addressLine4: 
+        type: string
+        description: "Address line 4."
+       addressLine5: 
+        type: string
+        description: "Address line 5."
+       cityName: 
+        type: string
+        description: "Name of the city."
+       countryCode: 
+        type: string
+        description: "Country code."
+       physicalAddressTypeCode: 
+        type: string
+        description: "Address type of the physical address mentioned. COR - correspondence, RES - Residential"
+       postalCode: 
+        type: string
+        description: "Postal code or zip code."
+       stateRegionCode: 
+        type: string
+        description: "State region code for address."    
+        
+  TelephoneContact: 
+    type: array
+    items:
+      description: "This entity represents telephone addresses for party. E.g., home telephone number, office telephone number, fax, mobile, pager."
+      properties: 
+       telephoneAddressTypeCode: 
+        type: string
+        description: "Address type of the telephony address mentioned, such as home, office, mobile, page, fax, etc."
+       telephoneNumber: 
+        type: string
+        description: "telephone number"   
+      
+  ElectronicContact: 
+    type: array
+    items:
+      description: "This entity represents electronic addresses for party. E.g., email, facebook id, etc."
+      properties: 
+       electronicAddress: 
+        type: string
+        description: "Electronic address."
+       electronicAddressTypeCode: 
+        type: string
+        description: "Address type of the electronic address mentioned, such as email, office email, website, facebook id, linkedin id, line id, twitter id, etc."    
+      
+  RecordCustomerRequest:
+    type: object
+    properties:
+      
+      RecordCustomerRequest: 
+        type: object
+        properties: 
+         branchCode: 
+          type: string
+         coreParty: 
+          $ref: "#/definitions/party"
+         partyModificationParameter:
+          type: array
+          items:
+            properties:
+              idType:
+                type: string
+                description: "Type of Identifier e.g. Policy, Claim"
+              idValue:
+                type: string
+                description: "Value of identifier Type e.g. Policy Number, Claim"
+              LOB:
+                type: string
+                description: "Line of Business, e.g. GI, Life"
+  
+        
+
+  party: 
+    type: object
+    description: "This entity represents demographic information about person or organization, i.e. party.   It does not include internal organization of the company.  It contains the golden records created from MDM as well as the unconsolidated records from source systems."
+    properties: 
+     
+      alertReceiverName: 
+        type: string
+        description: "Person/Department name, to whom an attention alert needs to be given"
+      annualIncomeAmount: 
+        type: string
+        description: "Annual income."
+      annualIncomeRangeCode: 
+        type: string
+        description: "Annual Income Range"
+      bankruptcyFlag: 
+        type: string
+        description: "Whether the Party has became bankrupt , determined by credit organizations like Bank, credit bureau etc."
+      birthDate: 
+        type: string
+        description: "Birth date of individual"
+      centralTaxNumber: 
+        type: string
+        description: "Central tax number. For India, it is the PAN number."
+      companyCode: 
+        type: string
+        description: "Company code.   It is used when the source system segregate the policy by internal company."
+      contactableFlag: 
+        type: string
+        description: "Indicates whether the customer can be contacted at all."
+      coreDBPartyId: 
+        type: string
+        description: "Unique ID in Core DB that identifies the party"
+      countryOfResidenceCode: 
+        type: string
+        description: "Country of a person' s citizenship or country in which the person is deemed a national currently."
+      deathDate: 
+        type: string
+        description: "Date of Death"
+      deceasedFlag: 
+        type: string
+        description: "Indicates whether an individual is deceased."
+      displayNameFormat: 
+        type: string
+        description: "Format to Display Name. 1=LAST NAME + FIRST NAME, 2=FIRST NAME + last name"
+      educationLevelCode: 
+        type: string
+        description: "Education level code. For example, HSC (High school), GRD (Graduate level), etc."
+      electronicContacts: 
+         $ref: "#/definitions/ElectronicContact"
+      emailableFlag: 
+        type: string
+        description: "Indicates whether the customer can be contacted via E-mail."
+      firstName: 
+        type: string
+        description: "First name of an individual."
+      form60Flag: 
+        type: string
+        description: "India only.  Indicator for Form 60 has been filed if PAN number is not available (PAN number is stored in Central Tax No)."
+      fraudCode: 
+        type: string
+        description: "Tracks the result of investigation decision . Values can be PF - Proven Fraud (After Investigation), NF - No Fraud (After Investigation), AF - Partial Fraud (After Investigation)"
+      genderCode: 
+        type: string
+        description: "Gender code"
+      geoDemographicCode: 
+        type: string
+        description: "Geo demographic code, which is derived from the geographic and demographic details of an individual. Note on RLS: Apply to owner, insured and assignee for storing policy location"
+      heightMtr: 
+        type: string
+        description: "Height in Meter"
+      idDocumentNumber: 
+        type: string
+        description: "Primary identity number used."
+      idDocumentTypeCode: 
+        type: string
+        description: "Type of the document for primary identity."
+      identityProofIndicator: 
+        type: string
+        description: "Indicate if ID proof has been provided."
+      lastName: 
+        type: string
+        description: "Last name of an individual.  Used as full name if the source does not have other name part. IF the party type code = 'C' (Corporate) then LastName = OrganizationName"
+      localDisplayNameFormat: 
+        type: string
+        description: "Format to Display Name. 1=LAST NAME + FIRST NAME, 2=FIRST NAME + last name"
+      localFirstName: 
+        type: string
+        description: "Local First name of an individual."
+      localLastName: 
+        type: string
+        description: "Local Last name of an individual.  Used as fullname if the source does not have other name part."
+      localMiddleName: 
+        type: string
+      mailableFlag: 
+        type: string
+        description: "Indicates whether the customer can be contacted via postal mail."
+      maritalStatusCode: 
+        type: string
+        description: "Marital status code. For example, married, unmarried, etc."
+      masterIndividualId: 
+        type: string
+      middleName: 
+        type: string
+        description: "Middle name"
+      nationalityCode: 
+        type: string
+        description: "Nationality of the individual"
+      occupationClassCode: 
+        type: string
+        description: "Occupation class code"
+      ownerOptCode: 
+        type: string
+        description: "Policy owner's preference for opting out of marketing communication"
+      partyId: 
+        type: string
+        description: "Unique ID in source system that identifies the party"
+      partyStatusCode: 
+        type: string
+        description: "This field captures the status of the client's."
+      partyTypeCode: 
+        type: string
+        description: "Individual or Organization"
+      passportNumber: 
+        type: string
+        description: "Passport Number of an individual"
+      physicalContacts: 
+        $ref: "#/definitions/physicalContact"
+      preferredContactMethodCode: 
+        type: string
+        description: "Preferred contact method."
+      primaryLanguageCode: 
+        type: string
+        description: "Primary language code."
+      salutationText: 
+        type: string
+        description: "Salutation used for letters, etc."
+      smokingHabitFlag: 
+        type: string
+      smsTextableFlag: 
+        type: string
+      socialSecurityNumber: 
+        type: string
+        description: "Social security number."
+      sourceofIncome: 
+        type: string
+        description: "Source of Income"
+      specialCaseCode: 
+        type: string
+      specialNeedCode: 
+        type: string
+        description: "Special need code. For example, Deaf, Partially sighted, Blind, etc."
+      staffFlag: 
+        type: string
+      staffNumber: 
+        type: string
+      telephonableFlag: 
+        type: string
+        description: "Indicates whether the customer can be contacted via telephone."
+      telephoneContacts: 
+        $ref: "#/definitions/telephoneContact"
+      vipFlag: 
+        type: string
+      weightKg: 
+        type: string
+        description: "Weight in Kilogram"        
+    
+  physicalContact: 
+    type: object
+    description: "This entity represents physical addresses (geographical) for party."
+    properties: 
+     GPSLocation: 
+      type: string
+      description: "GPS location in form of \"latitude,longitude\"."
+     addressLine1: 
+      type: string
+      description: "Address Line 1"
+     addressLine2: 
+      type: string
+      description: "Address Line 2"
+     addressLine3: 
+      type: string
+      description: "Address Line 3"
+     addressLine4: 
+      type: string
+      description: "Address line 4."
+     addressLine5: 
+      type: string
+      description: "Address line 5."
+     cityName: 
+      type: string
+      description: "Name of the city."
+     countryCode: 
+      type: string
+      description: "Country code."
+     elevation: 
+      type: string
+      description: "Altitude of the place above sea level."
+     physicalAddressTypeCode: 
+      type: string
+      description: "Address type of the physical address mentioned. COR - correspondence, RES - Residential"
+     postalCode: 
+      type: string
+      description: "Postal code or zip code."
+     primaryAddressFlag: 
+      type: string
+      description: "Indicates whether the address is a primary address. Expected value is 'Y' for primary and 'N' for others."
+     stateRegionCode: 
+      type: string
+      description: "State region code for address."  
+      
+  telephoneContact: 
+    type: object
+    description: "This entity represents telephone addresses for party. E.g., home telephone number, office telephone number, fax, mobile, pager."
+    properties: 
+     areaCode: 
+      type: string
+      description: "Area code of telephone"
+     countryCallingCode: 
+      type: string
+      description: "Country calling code"
+     extensionNumber: 
+      type: string
+      description: "Extension number of telephone."
+     telephoneAddressTypeCode: 
+      type: string
+      description: "Address type of the telephony address mentioned, such as home, office, mobile, page, fax, etc."
+     telephoneNumber: 
+      type: string
+      description: "telephone number"    
+      
+  RecordCustomerResponse:
+    type: object
+    properties:
+      CustomerSearch: 
+        type: object
+        properties: 
+         coreDBPartyId: 
+          type: string
+
+         partyId: 
+          type: string
+          description: "Unique ID in source system that identifies the party"
+         sourceSystemCode: 
+          type: string
+  
+ 
+            
+ 
+
+      
+  RecordCustomerContactRequest:
+    type: object
+    properties:
+      branchCode: 
+        type: string
+      coreParty: 
+        type: object
+        description: "This entity represents demographic information about person or organization, i.e. party.   It does not include internal organization of the company.  It contains the golden records created from MDM as well as the unconsolidated records from source systems."
+        properties: 
+          alertReceiverName: 
+            type: string
+            description: "Person/Department name, to whom an attention alert needs to be given"
+          annualIncomeAmount: 
+            type: string
+            description: "Annual income."
+          annualIncomeRangeCode: 
+            type: string
+            description: "Annual Income Range"
+          bankruptcyFlag: 
+            type: string
+            description: "Whether the Party has became bankrupt , determined by credit organizations like Bank, credit bureau etc."
+          birthDate: 
+            type: string
+            description: "Birth date of individual"
+          centralTaxNumber: 
+            type: string
+            description: "Central tax number. For India, it is the PAN number."
+          companyCode: 
+            type: string
+            description: "Company code.   It is used when the source system segregate the policy by internal company."
+          contactableFlag: 
+            type: string
+            description: "Indicates whether the customer can be contacted at all."
+          coreDBPartyId: 
+            type: string
+            description: "Unique ID in Core DB that identifies the party"
+          countryOfResidenceCode: 
+            type: string
+            description: "Country of a person' s citizenship or country in which the person is deemed a national currently."
+          deathDate: 
+            type: string
+            description: "Date of Death"
+          deceasedFlag: 
+            type: string
+            description: "Indicates whether an individual is deceased."
+          displayNameFormat: 
+            type: string
+            description: "Format to Display Name. 1=LAST NAME + FIRST NAME, 2=FIRST NAME + last name"
+          
+          educationLevelCode: 
+            type: string
+            description: "Education level code. For example, HSC (High school), GRD (Graduate level), etc."
+          electronicContacts: 
+            $ref: "#/definitions/ElectronicContact"
+          emailableFlag: 
+            type: string
+            description: "Indicates whether the customer can be contacted via E-mail."
+          firstName: 
+            type: string
+            description: "First name of an individual."
+          form60Flag: 
+            type: string
+            description: "India only.  Indicator for Form 60 has been filed if PAN number is not available (PAN number is stored in Central Tax No)."
+          fraudCode: 
+            type: string
+          genderCode: 
+            type: string
+            description: "Gender code"
+          geoDemographicCode: 
+            type: string
+            description: "Geo demographic code, which is derived from the geographic and demographic details of an individual. Note on RLS: Apply to owner, insured and assignee for storing policy location"
+          heightMtr: 
+            type: string
+            description: "Height in Meter"
+          idDocumentNumber: 
+            type: string
+            description: "Primary identity number used."
+          idDocumentTypeCode: 
+            type: string
+            description: "Type of the document for primary identity."
+          identityProofIndicator: 
+            type: string
+            description: "Indicate if ID proof has been provided."
+          lastName: 
+            type: string
+            description: "Last name of an individual.  Used as full name if the source does not have other name part. IF the party type code = 'C' (Corporate) then LastName = OrganizationName"
+          localDisplayNameFormat: 
+            type: string
+            description: "Format to Display Name. 1=LAST NAME + FIRST NAME, 2=FIRST NAME + last name"
+          localFirstName: 
+            type: string
+            description: "Local First name of an individual."
+          localLastName: 
+            type: string
+            description: "Local Last name of an individual.  Used as fullname if the source does not have other name part."
+          localMiddleName: 
+            type: string
+          mailableFlag: 
+            type: string
+            description: "Indicates whether the customer can be contacted via postal mail."
+          maritalStatusCode: 
+            type: string
+            description: "Marital status code. For example, married, unmarried, etc."
+          masterIndividualId: 
+            type: string
+          middleName: 
+            type: string
+            description: "Middle name"
+          nationalityCode: 
+            type: string
+            description: "Nationality of the individual"
+          occupationClassCode: 
+            type: string
+            description: "Occupation class code"
+          ownerOptCode: 
+            type: string
+            description: "Policy owner's preference for opting out of marketing communication"
+          partyId: 
+            type: string
+            description: "Unique ID in source system that identifies the party"
+          partyStatusCode: 
+            type: string
+            description: "This field captures the status of the client's."
+          partyTypeCode: 
+            type: string
+            description: "Individual or Organization"
+          passportNumber: 
+            type: string
+            description: "Passport Number of an individual"
+          physicalContacts: 
+            $ref: "#/definitions/physicalContact"
+          preferredContactMethodCode: 
+            type: string
+            description: "Preferred contact method."
+          primaryLanguageCode: 
+            type: string
+            description: "Primary language code."
+          salutationText: 
+            type: string
+            description: "Salutation used for letters, etc."
+          smokingHabitFlag: 
+            type: string
+          smsTextableFlag: 
+            type: string
+          socialSecurityNumber: 
+            type: string
+            description: "Social security number."
+          sourceofIncome: 
+            type: string
+            description: "Source of Income"
+          specialCaseCode: 
+            type: string
+          specialNeedCode: 
+            type: string
+            description: "Special need code. For example, Deaf, Partially sighted, Blind, etc."
+          staffFlag: 
+            type: string
+          staffNumber: 
+            type: string
+          telephonableFlag: 
+            type: string
+            description: "Indicates whether the customer can be contacted via telephone."
+          telephoneContacts: 
+            $ref: "#/definitions/telephoneContact"
+          vipFlag: 
+            type: string
+          weightKg: 
+            type: string
+            description: "Weight in Kilogram"
+      partyModificationParameter:
+        type: array
+        items:
+          properties:
+              idType:
+                type: string
+                description: "Type of Identifier e.g. Policy, Claim"                
+              idValue:
+                type: string
+                description: "Value of identifier Type e.g. Policy Number, Claim"                
+              LOB:
+                type: string
+                description: "Line of Business, e.g. GI, Life"                   
+                
+                
+             
+            
+  RecordCustomerContactResponse:
+    type: object
+    properties:
+      CustomerSearch: 
+        type: object
+        properties: 
+         coreDBPartyId: 
+          type: string
+         masterIndividualId: 
+          type: string
+         partyId: 
+          type: string
+          description: "Unique ID in source system that identifies the party"
+         sourceSystemCode: 
+          type: string
+          
+
+ 
